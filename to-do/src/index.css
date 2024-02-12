@@ -1,13 +1,12 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("../public/fonts/Roboto/Roboto-Medium.ttf") format("truetype");
+}
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Roboto";
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+  opacity: 0.5;
 }

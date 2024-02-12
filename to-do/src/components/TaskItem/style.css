@@ -1,0 +1,24 @@
+.task-item {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0 10px 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-item__delete-button {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 0;
+  margin-right: 5px;
+  background-image: url(../../../public/image/button-delete.png);
+}
+
+.task-item__task-text {
+  width: 400px;
+  height: auto;
+  word-wrap: break-word;
+  overflow: hidden;
+}
