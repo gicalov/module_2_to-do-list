@@ -1,4 +1,4 @@
-.task-item {
+.task {
   display: flex;
   flex-direction: row;
   margin: 10px 0 10px 0;
@@ -6,19 +6,37 @@
   align-items: center;
 }
 
-.task-item__delete-button {
+.task__checkbox {
+  width: 24px;
+  height: 24px;
+  margin: 0 20px 0 0;
+}
+
+.task__edit-button,
+.task__delete-button {
   width: 24px;
   height: 24px;
   background-size: cover;
   background-repeat: no-repeat;
   border: 0;
   margin-right: 5px;
+}
+
+.task__edit-button {
+  background-image: url(../../../public/image/button-edit.png);
+}
+
+.task__delete-button {
   background-image: url(../../../public/image/button-delete.png);
 }
 
-.task-item__task-text {
+.task__task-text {
   width: 400px;
   height: auto;
   word-wrap: break-word;
   overflow: hidden;
+}
+
+input:checked + p {
+  text-decoration: line-through;
 }

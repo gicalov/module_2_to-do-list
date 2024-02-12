@@ -1,5 +1,7 @@
 import React from "react";
-import TaskList from "../../TaskList/";
+import Task from "../../Task/";
+import Form from "../../Form/";
+import Error from "../../Error/";
 import { tasksList } from "../../../constants.js";
 import "./style.css";
 
@@ -9,6 +11,7 @@ class Main extends React.Component {
     this.state = {
       tasks: [],
       newTask: "",
+      error: "",
     };
   }
 
@@ -22,40 +25,55 @@ class Main extends React.Component {
 
   addTask = () => {
     const { tasks, newTask } = this.state;
-    if (newTask.trim()) {
-      this.setState({ tasks: [...tasks, newTask], newTask: "" });
+    const currentId = Date.now();
+    const error_now = newTask.trim() ? "" : "неверно введен текст";
+    this.setState({ error: error_now });
+    if (!error_now) {
+      this.setState({
+        tasks: [...tasks, { id: currentId, text: newTask, isCompleted: false }],
+        newTask: "",
+      });
     }
   };
 
-  deleteTask = (index) => {
+  deleteTask = (elementId) => {
     const { tasks } = this.state;
-    tasks.splice(index, 1);
-    this.setState({ tasks });
+    const updatedTasks = tasks.filter((element) => element.id !== elementId);
+    this.setState({ tasks: updatedTasks });
+  };
+
+  changeCheckbox = (elementId) => {
+    const { tasks } = this.state;
+    const updatedTasks = tasks.map((element) => {
+      return element.id === elementId
+        ? { ...element, isCompleted: !element.isCompleted }
+        : element;
+    });
+    this.setState({ tasks: updatedTasks });
   };
 
   render() {
-    const { tasks, newTask } = this.state;
+    const { tasks, newTask, error } = this.state;
 
     return (
       <div className="main">
         <div className="main-container">
           <h1 className="main-container__title">Список задач</h1>
-          <div className="main-containe-form">
-            <input
-              className="main-containe-form__input"
-              type="text"
-              placeholder="Введите задачу"
-              value={newTask}
-              onChange={this.handleInputChange}
-            />
-            <button
-              className="main-containe-form__button"
-              onClick={this.addTask}
-            >
-              Добавить
-            </button>
+          <Form
+            newTask={newTask}
+            handleInputChange={this.handleInputChange}
+            addTask={this.addTask}
+          />
+          {error && <Error error={error} />}
+          <div className="main-container__task-list">
+            {tasks.map((task) => (
+              <Task
+                task={task}
+                deleteTask={() => this.deleteTask(task.id)}
+                changeCheckbox={() => this.changeCheckbox(task.id)}
+              />
+            ))}
           </div>
-          <TaskList tasks={tasks} deleteTask={this.deleteTask} />
         </div>
       </div>
     );
