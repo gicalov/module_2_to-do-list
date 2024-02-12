@@ -3,7 +3,7 @@ import "./style.css";
 
 class Task extends React.Component {
   render() {
-    const { task, deleteTask, changeCheckbox } = this.props;
+    const { task, deleteTask, changeCheckbox, changeTask } = this.props;
 
     return (
       <div key={task.id} className="task">
@@ -14,7 +14,7 @@ class Task extends React.Component {
           onChange={changeCheckbox}
         />
         <p className="task__task-text">{task.text}</p>
-        <button className="task__edit-button"></button>
+        <button className="task__edit-button" onClick={changeTask}></button>
         <button className="task__delete-button" onClick={deleteTask}></button>
       </div>
     );
