@@ -1,7 +1,11 @@
 @font-face {
   font-family: "Roboto";
-  src: url("../public/fonts/Roboto/Roboto-Medium.ttf") format("truetype");
+  src: url("../public/fonts/Roboto/Roboto-Regular.ttf") format("truetype"),
+       url("../public/fonts/Roboto/Roboto-Light.ttf") format("truetype"),
+       url("../public/fonts/Roboto/Roboto-Medium.ttf") format("truetype"),
+       url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap") format("woff");
 }
+
 body {
   font-family: "Roboto";
 }

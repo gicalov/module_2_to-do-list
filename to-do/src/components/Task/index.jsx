@@ -6,7 +6,7 @@ class Task extends React.Component {
     const { task, deleteTask, changeCheckbox } = this.props;
 
     return (
-      <div key={task.id} className="task">
+      <div className="task">
         <input
           className="task__checkbox"
           type="checkbox"

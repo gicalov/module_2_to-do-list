@@ -15,25 +15,27 @@ class Main extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({ tasks: tasksList });
-  }
+  componentDidMount = () => this.setState({ tasks: tasksList });
 
-  handleInputChange = (event) => {
-    this.setState({ newTask: event.target.value });
-  };
+  handleInputChange = (event) => this.setState({ newTask: event.target.value });
 
   addTask = () => {
     const { tasks, newTask } = this.state;
     const currentId = Date.now();
-    const error_now = newTask.trim() ? "" : "неверно введен текст";
-    this.setState({ error: error_now });
-    if (!error_now) {
-      this.setState({
-        tasks: [...tasks, { id: currentId, text: newTask, isCompleted: false }],
-        newTask: "",
-      });
-    }
+    const error = newTask.trim() ? "" : "неверно введен текст";
+    this.setState({ error });
+
+    if (error) return;
+
+    const newTaskList = [
+      ...tasks,
+      { id: currentId, text: newTask, isCompleted: false },
+    ];
+    const sortedTasks = this.sortTasks(newTaskList);
+    this.setState({
+      tasks: sortedTasks,
+      newTask: "",
+    });
   };
 
   deleteTask = (elementId) => {
@@ -44,12 +46,34 @@ class Main extends React.Component {
 
   changeCheckbox = (elementId) => {
     const { tasks } = this.state;
-    const updatedTasks = tasks.map((element) => {
-      return element.id === elementId
-        ? { ...element, isCompleted: !element.isCompleted }
-        : element;
+    const updatedTasks = [...tasks];
+    const taskIndex = updatedTasks.findIndex(
+      (element) => element.id === elementId
+    );
+
+    if (taskIndex !== -1) {
+      updatedTasks[taskIndex].isCompleted =
+        !updatedTasks[taskIndex].isCompleted;
+      const sortedTasks = this.sortTasks(updatedTasks);
+      this.setState({ tasks: sortedTasks });
+    }
+  };
+
+  deleteAllTask = () => {
+    this.setState({ tasks: [] });
+  };
+
+  sortTasks = (list) => {
+    list.sort((a, b) => {
+      if (a.isCompleted && !b.isCompleted) {
+        return 1;
+      }
+      if (!a.isCompleted && b.isCompleted) {
+        return -1;
+      }
+      return 0;
     });
-    this.setState({ tasks: updatedTasks });
+    return list;
   };
 
   render() {
@@ -68,12 +92,20 @@ class Main extends React.Component {
           <div className="main-container__task-list">
             {tasks.map((task) => (
               <Task
+                key={task.id}
                 task={task}
                 deleteTask={() => this.deleteTask(task.id)}
                 changeCheckbox={() => this.changeCheckbox(task.id)}
               />
             ))}
           </div>
+          <button
+            className="main-container__delete-all-button"
+            type="button"
+            onClick={this.deleteAllTask}
+          >
+            Тотальная чистка
+          </button>
         </div>
       </div>
     );
