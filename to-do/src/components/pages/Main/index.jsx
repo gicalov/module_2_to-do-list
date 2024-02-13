@@ -2,6 +2,7 @@ import React from "react";
 import Task from "../../Task/";
 import Form from "../../Form/";
 import Error from "../../Error/";
+import sortTasks from '../../helpers/sortTasks.js';
 import { tasksList } from "../../../constants.js";
 import "./style.css";
 
@@ -15,23 +16,29 @@ class Main extends React.Component {
     };
   }
 
-  componentDidMount = () => this.setState({ tasks: tasksList });
+  componentDidMount = () => {
+    this.setState({ tasks: tasksList });
+  };
 
-  handleInputChange = (event) => this.setState({ newTask: event.target.value });
+  handleInputChange = (event) => {
+    this.setState({ newTask: event.target.value });
+  };
 
   addTask = () => {
     const { tasks, newTask } = this.state;
     const currentId = Date.now();
-    const error = newTask.trim() ? "" : "неверно введен текст";
-    this.setState({ error });
-
-    if (error) return;
+    
+    if (!newTask.trim()) { 
+      this.setState({ error: 'неверно введен текст' });
+      return;
+    }
 
     const newTaskList = [
       ...tasks,
       { id: currentId, text: newTask, isCompleted: false },
     ];
-    const sortedTasks = this.sortTasks(newTaskList);
+    const clone = [...newTaskList];
+    const sortedTasks = sortTasks(clone);
     this.setState({
       tasks: sortedTasks,
       newTask: "",
@@ -51,29 +58,20 @@ class Main extends React.Component {
       (element) => element.id === elementId
     );
 
-    if (taskIndex !== -1) {
-      updatedTasks[taskIndex].isCompleted =
-        !updatedTasks[taskIndex].isCompleted;
-      const sortedTasks = this.sortTasks(updatedTasks);
-      this.setState({ tasks: sortedTasks });
+    if (taskIndex === -1) {
+      this.setState({ error: 'ошибка при поиске индекса' });
+      return
     }
+
+    updatedTasks[taskIndex].isCompleted =
+      !updatedTasks[taskIndex].isCompleted;
+    const clone = [...updatedTasks];
+    const sortedTasks = sortTasks(clone);
+    this.setState({ tasks: sortedTasks });
   };
 
   deleteAllTask = () => {
     this.setState({ tasks: [] });
-  };
-
-  sortTasks = (list) => {
-    list.sort((a, b) => {
-      if (a.isCompleted && !b.isCompleted) {
-        return 1;
-      }
-      if (!a.isCompleted && b.isCompleted) {
-        return -1;
-      }
-      return 0;
-    });
-    return list;
   };
 
   render() {
