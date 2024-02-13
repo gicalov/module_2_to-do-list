@@ -3,6 +3,7 @@ import Task from "../../Task/";
 import Form from "../../Form/";
 import Error from "../../Error/";
 import TaskChange from "../../TaskChange/";
+import sortTasks from '../../helpers/sortTasks.js';
 import { tasksList } from "../../../constants.js";
 import "./style.css";
 
@@ -39,8 +40,8 @@ class Main extends React.Component {
       ...tasks,
       { id: currentId, text: newTask, isCompleted: false },
     ];
-    const clone = {...newTaskList};
-    const sortedTasks = this.sortTasks(clone);
+    const clone = [...newTaskList];
+    const sortedTasks = sortTasks(clone);
     this.setState({
       tasks: sortedTasks,
       newTask: "",
@@ -67,8 +68,8 @@ class Main extends React.Component {
 
     updatedTasks[taskIndex].isCompleted =
       !updatedTasks[taskIndex].isCompleted;
-    const clone = {...updatedTasks};
-    const sortedTasks = this.sortTasks(clone);
+    const clone = [...updatedTasks];
+    const sortedTasks = sortTasks(clone);
     this.setState({ tasks: sortedTasks });
   };
 
@@ -88,10 +89,9 @@ class Main extends React.Component {
   confirmEdit = (event, taskId, text) => {
     event.preventDefault();
     const { tasks } = this.state;
-    const error_now = text.trim() ? "" : "неверно введен текст";
-    this.setState({ error: error_now });
-
-    if (error_now) {
+    
+    if (!text.trim()) { 
+      this.setState({ error: 'неверно введен текст' });
       return;
     }
 
@@ -111,19 +111,6 @@ class Main extends React.Component {
 
   changeEntryField = (e) => {
     this.setState({ taskEdit: e.target.value });
-  };
-
-  sortTasks = (list) => {
-    list.sort((a, b) => {
-      if (a.isCompleted && !b.isCompleted) {
-        return 1;
-      }
-      if (!a.isCompleted && b.isCompleted) {
-        return -1;
-      }
-      return 0;
-    });
-    return list;
   };
 
   render() {
