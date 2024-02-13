@@ -39,7 +39,7 @@ class Main extends React.Component {
       ...tasks,
       { id: currentId, text: newTask, isCompleted: false },
     ];
-    const clone = structuredClone(newTaskList);
+    const clone = {...newTaskList};
     const sortedTasks = this.sortTasks(clone);
     this.setState({
       tasks: sortedTasks,
@@ -67,7 +67,7 @@ class Main extends React.Component {
 
     updatedTasks[taskIndex].isCompleted =
       !updatedTasks[taskIndex].isCompleted;
-    const clone = structuredClone(updatedTasks);
+    const clone = {...updatedTasks};
     const sortedTasks = this.sortTasks(clone);
     this.setState({ tasks: sortedTasks });
   };
