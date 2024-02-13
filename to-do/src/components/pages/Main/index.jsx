@@ -18,23 +18,29 @@ class Main extends React.Component {
     };
   }
 
-  componentDidMount = () => this.setState({ tasks: tasksList });
+  componentDidMount = () => {
+    this.setState({ tasks: tasksList });
+  };
 
-  handleInputChange = (event) => this.setState({ newTask: event.target.value });
+  handleInputChange = (event) => {
+    this.setState({ newTask: event.target.value });
+  };
 
   addTask = () => {
     const { tasks, newTask } = this.state;
     const currentId = Date.now();
-    const error = newTask.trim() ? "" : "неверно введен текст";
-    this.setState({ error });
-
-    if (error) return;
+    
+    if (!newTask.trim()) { 
+      this.setState({ error: 'неверно введен текст' });
+      return;
+    }
 
     const newTaskList = [
       ...tasks,
       { id: currentId, text: newTask, isCompleted: false },
     ];
-    const sortedTasks = this.sortTasks(newTaskList);
+    const clone = structuredClone(newTaskList);
+    const sortedTasks = this.sortTasks(clone);
     this.setState({
       tasks: sortedTasks,
       newTask: "",
@@ -54,12 +60,16 @@ class Main extends React.Component {
       (element) => element.id === elementId
     );
 
-    if (taskIndex !== -1) {
-      updatedTasks[taskIndex].isCompleted =
-        !updatedTasks[taskIndex].isCompleted;
-      const sortedTasks = this.sortTasks(updatedTasks);
-      this.setState({ tasks: sortedTasks });
+    if (taskIndex === -1) {
+      this.setState({ error: 'ошибка при поиске индекса' });
+      return
     }
+
+    updatedTasks[taskIndex].isCompleted =
+      !updatedTasks[taskIndex].isCompleted;
+    const clone = structuredClone(updatedTasks);
+    const sortedTasks = this.sortTasks(clone);
+    this.setState({ tasks: sortedTasks });
   };
 
   deleteAllTask = () => {
