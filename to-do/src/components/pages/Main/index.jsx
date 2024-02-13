@@ -18,30 +18,27 @@ class Main extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({ tasks: tasksList });
-  }
+  componentDidMount = () => this.setState({ tasks: tasksList });
 
-  handleInputChange = (event) => {
-    this.setState({ newTask: event.target.value });
-  };
+  handleInputChange = (event) => this.setState({ newTask: event.target.value });
 
   addTask = () => {
     const { tasks, newTask } = this.state;
     const currentId = Date.now();
-    const error_now = newTask.trim() ? "" : "неверно введен текст";
-    this.setState({ error: error_now });
-    if (!error_now) {
-      const newTaskList = [
-        ...tasks,
-        { id: currentId, text: newTask, isCompleted: false },
-      ];
-      const sortedTasks = this.sortTasks(newTaskList);
-      this.setState({
-        tasks: sortedTasks,
-        newTask: "",
-      });
-    }
+    const error = newTask.trim() ? "" : "неверно введен текст";
+    this.setState({ error });
+
+    if (error) return;
+
+    const newTaskList = [
+      ...tasks,
+      { id: currentId, text: newTask, isCompleted: false },
+    ];
+    const sortedTasks = this.sortTasks(newTaskList);
+    this.setState({
+      tasks: sortedTasks,
+      newTask: "",
+    });
   };
 
   deleteTask = (elementId) => {
@@ -52,14 +49,17 @@ class Main extends React.Component {
 
   changeCheckbox = (elementId) => {
     const { tasks } = this.state;
-    const updatedTasks = tasks.map((element) => {
-      return element.id === elementId
-        ? { ...element, isCompleted: !element.isCompleted }
-        : element;
-    });
-    const sortedTasks = this.sortTasks(updatedTasks);
+    const updatedTasks = [...tasks];
+    const taskIndex = updatedTasks.findIndex(
+      (element) => element.id === elementId
+    );
 
-    this.setState({ tasks: sortedTasks });
+    if (taskIndex !== -1) {
+      updatedTasks[taskIndex].isCompleted =
+        !updatedTasks[taskIndex].isCompleted;
+      const sortedTasks = this.sortTasks(updatedTasks);
+      this.setState({ tasks: sortedTasks });
+    }
   };
 
   deleteAllTask = () => {
@@ -80,24 +80,23 @@ class Main extends React.Component {
     const { tasks } = this.state;
     const error_now = text.trim() ? "" : "неверно введен текст";
     this.setState({ error: error_now });
-    if (!error_now) {
-      const mappedList = tasks.map((element) =>
-        element.id === taskId
-          ? {
-              id: element.id,
-              text: text,
-              isCompleted: element.isCompleted,
-            }
-          : element
-      );
-      this.setState({ tasks: mappedList, isChangeing: 0 });
+
+    if (error_now) {
+      return;
     }
+
+    const editedTask = tasks.find((element) => element.id === taskId);
+
+    if (editedTask) {
+      editedTask.text = text;
+    }
+    this.setState({ tasks, isChangeing: 0 });
   };
 
   fixInputFields = (taskId) => {
     const { tasks } = this.state;
-    const currentTask = tasks.filter((element) => element.id === taskId);
-    this.setState({ taskEdit: currentTask[0].text });
+    const currentTask = tasks.find((element) => element.id === taskId);
+    this.setState({ taskEdit: currentTask.text });
   };
 
   changeEntryField = (e) => {
@@ -135,6 +134,7 @@ class Main extends React.Component {
               <div>
                 {!(task.id === isChangeing) ? (
                   <Task
+                    key={task.id}
                     task={task}
                     deleteTask={() => this.deleteTask(task.id)}
                     changeCheckbox={() => this.changeCheckbox(task.id)}
@@ -142,6 +142,7 @@ class Main extends React.Component {
                   />
                 ) : (
                   <TaskChange
+                    key={task.id}
                     task={task}
                     stopEdit={() => this.stopEdit()}
                     confirmEdit={(event, taskId, text) =>

@@ -7,7 +7,6 @@ class TaskChange extends React.Component {
 
     return (
       <form
-        key={task.id}
         className="task-change"
         onSubmit={(event) => {
           confirmEdit(event, task.id, taskEdit);
