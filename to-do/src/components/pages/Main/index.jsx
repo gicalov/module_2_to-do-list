@@ -85,17 +85,17 @@ class Main extends React.Component {
     this.setState({ changedTaskId: 0 });
   };
 
-  saveEditingTask = (event, taskId, text) => {
+  saveEditingTask = (event, taskId) => {
     event.preventDefault();
-    const { tasks } = this.state;
+    const { tasks, taskEdit } = this.state;
     
-    if (!text.trim()) { 
+    if (!taskEdit.trim()) { 
       this.setState({ error: 'неверно введен текст' });
       return;
     }
 
     const editedTask = tasks.find((element) => element.id === taskId);
-    editedTask.text = text;
+    editedTask.text = taskEdit;
     this.setState({ tasks, changedTaskId: 0 });
   };
 

@@ -9,7 +9,7 @@ class TaskEditForm extends React.Component {
       <form
         className="task-edit-form"
         onSubmit={(event) => {
-          saveEditingTask(event, task.id, taskEdit);
+          saveEditingTask(event, task.id);
         }}
       >
         <input
