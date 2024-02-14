@@ -1,11 +1,11 @@
 const sortTasks = (list) => {
-  const clone = [...list];
+  const cloneList = [...list];
   
   if (!Array.isArray(list)) {
     throw new Error('List is not an array');
   }
 
-  clone.sort((a, b) => {
+  cloneList.sort((a, b) => {
     if (a.isCompleted && !b.isCompleted) {
       return 1;
     }
@@ -15,7 +15,7 @@ const sortTasks = (list) => {
     return 0;
   });
   
-  return clone;
+  return cloneList;
 };
 
 export default sortTasks;

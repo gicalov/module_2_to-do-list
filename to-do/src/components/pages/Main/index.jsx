@@ -3,7 +3,7 @@ import Task from "../../Task/";
 import Form from "../../Form/";
 import Error from "../../Error/";
 import TaskChange from "../../TaskChange/";
-import sortTasks from '../../helpers/sortTasks.js';
+import sortTasks from '../../../helpers/sort-tasks.js';
 import { tasksList } from "../../../constants.js";
 import "./style.css";
 
