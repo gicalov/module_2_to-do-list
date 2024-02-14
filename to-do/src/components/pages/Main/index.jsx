@@ -93,10 +93,7 @@ class Main extends React.Component {
     }
 
     const editedTask = tasks.find((element) => element.id === taskId);
-
-    if (editedTask) {
-      editedTask.text = text;
-    }
+    editedTask.text = text;
     this.setState({ tasks, isChangeing: 0 });
   };
 
