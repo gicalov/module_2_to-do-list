@@ -1,4 +1,4 @@
-.task-change {
+.task-edit-form {
   display: flex;
   flex-direction: row;
   margin: 10px 0 10px 0;
@@ -6,8 +6,8 @@
   align-items: center;
 }
 
-.task-change__confirm-edit-button,
-.task__stop-edit-button {
+.task-edit-form__confirm-edit-button,
+.task-edit-form__cancel-edit-button {
   width: 24px;
   height: 24px;
   background-size: cover;
@@ -16,15 +16,15 @@
   margin-right: 5px;
 }
 
-.task-change__confirm-edit-button {
+.task-edit-form__confirm-edit-button {
   background-image: url(../../../public/image/button-edit.png);
 }
 
-.task__stop-edit-button {
+.task-edit-form__cancel-edit-button {
   background-image: url(../../../public/image/button-stop-editing.png);
 }
 
-.task-change__input {
+.task-edit-form__input {
   width: 435px;
   height: 30px;
   word-wrap: break-word;

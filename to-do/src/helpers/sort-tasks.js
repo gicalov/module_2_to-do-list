@@ -1,8 +1,8 @@
 const sortTasks = (list) => {
   const cloneList = [...list];
-  
+
   if (!Array.isArray(list)) {
-    throw new Error('List is not an array');
+    return;
   }
 
   cloneList.sort((a, b) => {
@@ -14,7 +14,7 @@ const sortTasks = (list) => {
     }
     return 0;
   });
-  
+
   return cloneList;
 };
 

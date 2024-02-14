@@ -2,7 +2,7 @@ import React from "react";
 import Task from "../../Task/";
 import Form from "../../Form/";
 import Error from "../../Error/";
-import TaskChange from "../../TaskChange/";
+import TaskEditForm from "../../TaskEditForm/";
 import sortTasks from '../../../helpers/sort-tasks.js';
 import { tasksList } from "../../../constants.js";
 import "./style.css";
@@ -14,7 +14,7 @@ class Main extends React.Component {
       tasks: [],
       newTask: "",
       error: "",
-      isChangeing: 0,
+      changedTaskId: 0,
       taskEdit: "",
     };
   }
@@ -74,16 +74,18 @@ class Main extends React.Component {
     this.setState({ tasks: [] });
   };
 
-  changeTask = (taskId) => {
-    this.setState({ isChangeing: taskId });
-    this.fixInputFields(taskId);
+  openEditForm = (taskId) => {
+    const { tasks } = this.state;
+    this.setState({ changedTaskId: taskId });
+    const currentTask = tasks.find((element) => element.id === taskId);
+    this.setState({ taskEdit: currentTask.text });
   };
 
-  stopEdit = () => {
-    this.setState({ isChangeing: 0 });
+  cancelEditingTask = () => {
+    this.setState({ changedTaskId: 0 });
   };
 
-  confirmEdit = (event, taskId, text) => {
+  saveEditingTask = (event, taskId, text) => {
     event.preventDefault();
     const { tasks } = this.state;
     
@@ -94,21 +96,15 @@ class Main extends React.Component {
 
     const editedTask = tasks.find((element) => element.id === taskId);
     editedTask.text = text;
-    this.setState({ tasks, isChangeing: 0 });
+    this.setState({ tasks, changedTaskId: 0 });
   };
 
-  fixInputFields = (taskId) => {
-    const { tasks } = this.state;
-    const currentTask = tasks.find((element) => element.id === taskId);
-    this.setState({ taskEdit: currentTask.text });
-  };
-
-  changeEntryField = (e) => {
+  handleChangeInput = (e) => {
     this.setState({ taskEdit: e.target.value });
   };
 
   render() {
-    const { tasks, newTask, error, isChangeing, taskEdit } = this.state;
+    const { tasks, newTask, error, changedTaskId, taskEdit } = this.state;
 
     return (
       <div className="main">
@@ -123,24 +119,22 @@ class Main extends React.Component {
           <div className="main-container__task-list">
             {tasks.map((task) => (
               <div>
-                {!(task.id === isChangeing) ? (
+                {(task.id !== changedTaskId) ? (
                   <Task
                     key={task.id}
                     task={task}
                     deleteTask={() => this.deleteTask(task.id)}
                     changeCheckbox={() => this.changeCheckbox(task.id)}
-                    changeTask={() => this.changeTask(task.id)}
+                    openEditForm={() => this.openEditForm(task.id)}
                   />
                 ) : (
-                  <TaskChange
+                  <TaskEditForm
                     key={task.id}
                     task={task}
-                    stopEdit={() => this.stopEdit()}
-                    confirmEdit={(event, taskId, text) =>
-                      this.confirmEdit(event, taskId, text)
-                    }
+                    cancelEditingTask={() => this.cancelEditingTask()}
+                    saveEditingTask={this.saveEditingTask}
                     taskEdit={taskEdit}
-                    changeEntryField={(e) => this.changeEntryField(e)}
+                    handleChangeInput={this.handleChangeInput}
                   />
                 )}
               </div>
