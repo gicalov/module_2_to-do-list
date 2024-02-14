@@ -1,0 +1,8 @@
+.error {
+  background-color: brown;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: rgb(0, 162, 255);
+}
