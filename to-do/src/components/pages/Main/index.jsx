@@ -14,7 +14,7 @@ class Main extends React.Component {
       tasks: [],
       newTask: "",
       error: "",
-      changedTaskId: 0,
+      changedTaskId: null,
       taskEdit: "",
     };
   }
