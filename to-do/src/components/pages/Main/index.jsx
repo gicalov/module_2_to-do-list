@@ -37,8 +37,7 @@ class Main extends React.Component {
       ...tasks,
       { id: currentId, text: newTask, isCompleted: false },
     ];
-    const clone = [...newTaskList];
-    const sortedTasks = sortTasks(clone);
+    const sortedTasks = sortTasks(newTaskList);
     this.setState({
       tasks: sortedTasks,
       newTask: "",
@@ -59,14 +58,12 @@ class Main extends React.Component {
     );
 
     if (taskIndex === -1) {
-      this.setState({ error: 'ошибка при поиске индекса' });
       return
     }
 
     updatedTasks[taskIndex].isCompleted =
       !updatedTasks[taskIndex].isCompleted;
-    const clone = [...updatedTasks];
-    const sortedTasks = sortTasks(clone);
+    const sortedTasks = sortTasks(updatedTasks);
     this.setState({ tasks: sortedTasks });
   };
 
