@@ -2,7 +2,8 @@ import React from "react";
 import Task from "../../Task/";
 import Form from "../../Form/";
 import Error from "../../Error/";
-import sortTasks from '../../helpers/sortTasks.js';
+import TaskEditForm from "../../TaskEditForm/";
+import sortTasks from '../../../helpers/sort-tasks.js';
 import { tasksList } from "../../../constants.js";
 import "./style.css";
 
@@ -13,6 +14,8 @@ class Main extends React.Component {
       tasks: [],
       newTask: "",
       error: "",
+      changedTaskId: null,
+      taskEdit: "",
     };
   }
 
@@ -71,8 +74,37 @@ class Main extends React.Component {
     this.setState({ tasks: [] });
   };
 
+  openEditForm = (taskId) => {
+    const { tasks } = this.state;
+    this.setState({ changedTaskId: taskId });
+    const currentTask = tasks.find((element) => element.id === taskId);
+    this.setState({ taskEdit: currentTask.text });
+  };
+
+  cancelEditingTask = () => {
+    this.setState({ changedTaskId: null });
+  };
+
+  saveEditingTask = (event, taskId) => {
+    event.preventDefault();
+    const { tasks, taskEdit } = this.state;
+    
+    if (!taskEdit.trim()) { 
+      this.setState({ error: 'неверно введен текст' });
+      return;
+    }
+
+    const editedTask = tasks.find((element) => element.id === taskId);
+    editedTask.text = taskEdit;
+    this.setState({ tasks, changedTaskId: null });
+  };
+
+  handleChangeInput = (e) => {
+    this.setState({ taskEdit: e.target.value });
+  };
+
   render() {
-    const { tasks, newTask, error } = this.state;
+    const { tasks, newTask, error, changedTaskId, taskEdit } = this.state;
 
     return (
       <div className="main">
@@ -86,12 +118,26 @@ class Main extends React.Component {
           {error && <Error error={error} />}
           <div className="main-container__task-list">
             {tasks.map((task) => (
-              <Task
-                key={task.id}
-                task={task}
-                deleteTask={() => this.deleteTask(task.id)}
-                changeCheckbox={() => this.changeCheckbox(task.id)}
-              />
+              <div>
+                {(task.id !== changedTaskId) ? (
+                  <Task
+                    key={task.id}
+                    task={task}
+                    deleteTask={() => this.deleteTask(task.id)}
+                    changeCheckbox={() => this.changeCheckbox(task.id)}
+                    openEditForm={() => this.openEditForm(task.id)}
+                  />
+                ) : (
+                  <TaskEditForm
+                    key={task.id}
+                    task={task}
+                    cancelEditingTask={this.cancelEditingTask}
+                    saveEditingTask={this.saveEditingTask}
+                    taskEdit={taskEdit}
+                    handleChangeInput={this.handleChangeInput}
+                  />
+                )}
+              </div>
             ))}
           </div>
           <button
