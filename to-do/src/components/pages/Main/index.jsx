@@ -82,7 +82,7 @@ class Main extends React.Component {
   };
 
   cancelEditingTask = () => {
-    this.setState({ changedTaskId: 0 });
+    this.setState({ changedTaskId: null });
   };
 
   saveEditingTask = (event, taskId) => {
@@ -96,7 +96,7 @@ class Main extends React.Component {
 
     const editedTask = tasks.find((element) => element.id === taskId);
     editedTask.text = taskEdit;
-    this.setState({ tasks, changedTaskId: 0 });
+    this.setState({ tasks, changedTaskId: null });
   };
 
   handleChangeInput = (e) => {
@@ -131,7 +131,7 @@ class Main extends React.Component {
                   <TaskEditForm
                     key={task.id}
                     task={task}
-                    cancelEditingTask={() => this.cancelEditingTask()}
+                    cancelEditingTask={this.cancelEditingTask}
                     saveEditingTask={this.saveEditingTask}
                     taskEdit={taskEdit}
                     handleChangeInput={this.handleChangeInput}
